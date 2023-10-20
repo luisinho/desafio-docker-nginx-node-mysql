@@ -1,0 +1,57 @@
+version: '3.0'
+services:
+
+   nginx-app:
+       build:
+         context: ./nginx
+       image: luisq/nginx-app
+       container_name: nginx-app
+       networks:
+          - nginx-node-net
+       ports:
+           - "80:80"
+       tty: true
+       depends_on:
+         - node-server
+
+   node-server:
+       build:
+         context: ./node
+       image: luisq/node-app
+       container_name: node-server
+       # entrypoint: dockerize -wait tcp://db-mysql:3306 -timeout 20s docker-entrypoint.sh
+       # entrypoint: dockerize -wait tcp://db-mysql:3306 -timeout 20s sh -c "node server.js"
+       entrypoint: dockerize -wait tcp://db-mysql:3306 -timeout 20s node server.js
+       networks:
+          - nginx-node-net
+       ports:
+           - 3000:3000       
+       volumes:
+         - ./node:/usr/src/app
+       depends_on:
+         - db-mysql
+
+   db-mysql:
+       build:
+         context: ./mysql
+       image: luisq/db-mysql
+       command: --innodb-use-native-aio=0
+       container_name: db-mysql
+       restart: always
+       expose:
+         - "3306"
+       ports:
+         - "3306:3306"
+       tty: true
+       #volumes:
+        # - ./mysql:/var/lib/mysql
+       environment:
+         - MYSQL_DATABASE=nodedb
+         - MYSQL_ROOT_PASSWORD=root
+       networks:
+          - nginx-node-net
+
+networks:
+  nginx-node-net:
+    driver: bridge
+    name: nginx-node-net
