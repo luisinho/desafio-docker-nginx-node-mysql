@@ -20,8 +20,9 @@ services:
        image: luisq/node-app
        container_name: node-server
        # entrypoint: dockerize -wait tcp://db-mysql:3306 -timeout 20s docker-entrypoint.sh
-       # entrypoint: dockerize -wait tcp://db-mysql:3306 -timeout 20s sh -c "node server.js"
-       entrypoint: dockerize -wait tcp://db-mysql:3306 -timeout 20s node server.js
+       entrypoint: dockerize -wait tcp://db-mysql:3306 -timeout 20s sh -c "npm install node server.js"
+       # entrypoint: dockerize -wait tcp://db-mysql:3306 -timeout 30s sh -c "node server.js"
+       # entrypoint: dockerize -wait tcp://db-mysql:3306 -timeout 30s node server.js
        networks:
           - nginx-node-net
        ports:
@@ -43,8 +44,6 @@ services:
        ports:
          - "3306:3306"
        tty: true
-       #volumes:
-        # - ./mysql:/var/lib/mysql
        environment:
          - MYSQL_DATABASE=nodedb
          - MYSQL_ROOT_PASSWORD=root

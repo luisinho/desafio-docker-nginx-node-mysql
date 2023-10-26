@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:18-slim
 
 WORKDIR /usr/src/app
 
@@ -11,14 +11,12 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
-COPY package*.json ./
+USER node
 
-RUN npm install
+# COPY package*.json ./
 
 COPY . .
 
-USER node
-
 EXPOSE 3000
 
-CMD [ "node", "server.js" ]
+# CMD [ "tail", "-f", "/dev/null" ]
