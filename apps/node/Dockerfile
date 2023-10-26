@@ -1,9 +1,5 @@
 FROM node:18-slim
 
-WORKDIR /usr/src/app
-
-RUN chmod +x /usr/src/app
-
 RUN apt-get update && apt-get install -y wget
 
 ENV DOCKERIZE_VERSION v0.6.1
@@ -13,10 +9,6 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 
 USER node
 
-# COPY package*.json ./
+WORKDIR /usr/src/app
 
-COPY . .
-
-EXPOSE 3000
-
-# CMD [ "tail", "-f", "/dev/null" ]
+# RUN chmod +x /usr/src/app
