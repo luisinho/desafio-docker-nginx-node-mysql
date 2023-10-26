@@ -19,7 +19,7 @@ services:
          context: ./node
        image: luisq/node-app
        container_name: node-server       
-       entrypoint: dockerize -wait tcp://db-mysql:3306 -timeout 20s sh -c "npm install && node server.js"       
+       entrypoint: dockerize -wait tcp://db-mysql:3306 -timeout 40s sh -c "npm install && node server.js"       
        networks:
           - nginx-node-net
        ports:
